@@ -1,0 +1,11 @@
+type Query {
+    getById(id: ID): TemperatureEntry
+    getAll: [TemperatureEntry!]!
+}
+
+type TemperatureEntry {
+    id: ID
+    time_stamp: Float
+    fahrenheit_temp: Float
+    celsius_temp: Float
+}

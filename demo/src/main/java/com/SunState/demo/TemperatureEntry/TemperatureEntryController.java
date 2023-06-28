@@ -3,6 +3,7 @@ package com.SunState.demo.TemperatureEntry;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class TemperatureEntryController
 	}
 
 	@GetMapping("/getAllTempEntries")
+	@QueryMapping
 	public List<TemperatureEntry> getAll()
 	{
 		return repo.findAll();
@@ -87,6 +89,7 @@ public class TemperatureEntryController
 	}
 
 	@GetMapping("/getById/{id}")
+	@QueryMapping
 	public TemperatureEntry getById( @PathVariable Long id )
 	{
 		return repo.findById(id).get();
