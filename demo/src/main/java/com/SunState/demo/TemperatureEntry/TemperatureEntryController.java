@@ -2,7 +2,6 @@ package com.SunState.demo.TemperatureEntry;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TemperatureEntryController
 {
 
-	@Autowired
-	private ITemperatureEntryRepository repo;
+	private TemperatureEntryService service;
+
+	public TemperatureEntryController( TemperatureEntryService service )
+	{
+		this.service = service;
+	}
 
 	@PostMapping("/saveTemperatureEntry")
 	public String saveTempEntry( @RequestBody TemperatureEntry entry )
 	{
-		repo.save(entry);
+		service.save(entry);
 		return "Entry Saved";
 	}
 
@@ -32,7 +35,7 @@ public class TemperatureEntryController
 	{
 		float celsius = Float.parseFloat(celsius_string);
 		TemperatureEntry entry = TemperatureEntry.builder().celsius_temp(celsius).time_stamp(System.currentTimeMillis()).build();
-		repo.save(entry);
+		service.save(entry);
 		return entry.getFahrenheit_temp()
 				+ " Degrees Fahrenheit";
 	}
@@ -42,7 +45,7 @@ public class TemperatureEntryController
 	{
 		float fahrenheit = Float.parseFloat(fahrenheit_string);
 		TemperatureEntry entry = TemperatureEntry.builder().fahrenheit_temp(fahrenheit).time_stamp(System.currentTimeMillis()).build();
-		repo.save(entry);
+		service.save(entry);
 		return entry.getCelsius_temp()
 				+ " Degrees Celsius";
 	}
@@ -51,14 +54,14 @@ public class TemperatureEntryController
 	@QueryMapping
 	public List<TemperatureEntry> getAll()
 	{
-		return repo.findAll();
+		return service.findAll();
 	}
 
 	@GetMapping("/getAverageFahrenheit")
 	public String getAverageFahrenheit()
 	{
 
-		Double fahrenheit_average = repo.findAll().stream().mapToDouble(TemperatureEntry::getFahrenheit_temp).average().orElse(Double.NaN);
+		Double fahrenheit_average = service.findAll().stream().mapToDouble(TemperatureEntry::getFahrenheit_temp).average().orElse(Double.NaN);
 
 		return fahrenheit_average
 				+ " Degrees Fahrenheit";
@@ -68,7 +71,7 @@ public class TemperatureEntryController
 	public String getAverageCelsius()
 	{
 
-		Double celsius_average = repo.findAll().stream().mapToDouble(TemperatureEntry::getCelsius_temp).average().orElse(Double.NaN);
+		Double celsius_average = service.findAll().stream().mapToDouble(TemperatureEntry::getCelsius_temp).average().orElse(Double.NaN);
 
 		return celsius_average
 				+ " Degrees Celsius";
@@ -78,7 +81,7 @@ public class TemperatureEntryController
 	public String getAverageForLastWeek()
 	{
 
-		Double fahrenheit_average = repo.findAll().stream().filter(e -> e.getTime_stamp() > (System.currentTimeMillis()
+		Double fahrenheit_average = service.findAll().stream().filter(e -> e.getTime_stamp() > (System.currentTimeMillis()
 				- (7 * 24 * 60 * 60 * 1000))).mapToDouble(TemperatureEntry::getFahrenheit_temp).average().orElse(Double.NaN);
 
 		return fahrenheit_average
@@ -92,13 +95,13 @@ public class TemperatureEntryController
 	@QueryMapping
 	public TemperatureEntry getById( @PathVariable Long id )
 	{
-		return repo.findById(id).get();
+		return service.findById(id);
 	}
 
 	@DeleteMapping("/delete/{id}")
 	public String delete( @PathVariable Long id )
 	{
-		repo.deleteById(id);
+		service.deleteById(id);
 		return "Entry Deleted";
 	}
 }
