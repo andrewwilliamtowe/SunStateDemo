@@ -1,6 +1,7 @@
 # SunStateDemo
 Hello and Welcome to Andrew Towe's Demonstration for Sustate Equipment
 Details to note about this application: 
+1. To run this application, go to the target folder and enter the following command:```java -jar demo-0.0.1-SNAPSHOT.jar```
 1. A Postgresql server is embedded in a docker container that runs on startup.
 2. GraphQL can be used for viewing data. The link for while running the app is http://localhost:8080/graphiql?path=/graphql
 3. The application manipulates the TemperatureEntry object, which has the following variables:
